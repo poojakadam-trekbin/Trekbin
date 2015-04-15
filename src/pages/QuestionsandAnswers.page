@@ -1,0 +1,38 @@
+<apex:page showHeader="false" controller="TBN_QuestionandAnswersController" sidebar="false">
+	<center><h6>QUESTIONS and ANSWERS related to products</h6></center><br/><hr></hr>
+	<apex:form >
+		<apex:commandbutton value="Save Answers" action="{!saveanswers}" />
+		<br/><hr></hr>
+		<table border="0" width="80%" id="tbl">
+			<apex:repeat value="{!lstQuestion}" var="ques">
+				<tr>
+					<td>
+						<strong><apex:outputfield value="{!ques.Product__r.Name}"/></strong>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h1>QUESTION</h1><br/>
+						<apex:outputfield value="{!ques.Question__c}"/><br/>
+						<apex:actionRegion >
+							<apex:inputfield value="{!ques.Answer_Type__c}" >
+								<apex:actionSupport event="onchange" reRender="tbl" />
+							</apex:inputfield>
+						</apex:actionRegion><br/>
+						
+						<h1>ANSWER</h1><br/>
+						<apex:repeat value="{!lstAnswer}" var="ans" >
+							<apex:inputfield value="{!ans.Solution__c}"  /><br/>
+<!-- 							rendered="{!ques.Answer_Type__c == 'Paragraph'}" -->
+							<apex:outputPanel >
+<!-- 							rendered="{!ques.Answer_Type__c == 'Yes/No'}" -->
+								<apex:inputcheckbox value="{!ans.Yes__c}" >Yes</apex:inputcheckbox><br/>
+								<apex:inputcheckbox value="{!ans.No__c}" >No</apex:inputcheckbox>
+							</apex:outputPanel> 
+						</apex:repeat>
+					</td>
+				</tr>
+			</apex:repeat>
+		</table>
+	</apex:form>
+</apex:page>
