@@ -1,35 +1,34 @@
 <apex:page showHeader="false" controller="TBN_QuestionandAnswersController" sidebar="false">
 	<center><h6>QUESTIONS and ANSWERS related to products</h6></center><br/><hr></hr>
+	<apex:outputpanel >
+		<apex:outputtext value="{!intAnswered}" ><b>Answered Questions</b></apex:outputtext><br/>
+		<apex:outputtext value="{!intUnanswered}"><b>Pending Questions</b></apex:outputtext>
+	</apex:outputpanel><hr></hr>
 	<apex:form >
-		<apex:commandbutton value="Save Answers" action="{!saveanswers}" />
+		<apex:actionFunction name="doControllerSave" action="{!saveanswers}" />
+		<apex:commandbutton value="Save Answers" onclick="doControllerSave();" />
 		<br/><hr></hr>
-		<table border="0" width="80%" id="tbl">
-			<apex:repeat value="{!lstQuestion}" var="ques">
+		<table border="1" width="80%" id="tbl">
+			<apex:repeat value="{!RecordsToDisplay}" var="d">
 				<tr>
 					<td>
-						<strong><apex:outputfield value="{!ques.Product__r.Name}"/></strong>
+						<strong>Product name </strong>&nbsp; &nbsp; <apex:outputfield value="{!d.objQuestion.Product__r.Name}"/>
 					</td>
-				</tr>
+				</tr>  
 				<tr>
 					<td>
-						<h1>QUESTION</h1><br/>
-						<apex:outputfield value="{!ques.Question__c}"/><br/>
+						<h1>Questions</h1>&nbsp; &nbsp;
+						<apex:outputfield value="{!d.objQuestion.Question__c}"/><br/>
+						<h1>Type of Answer</h1>&nbsp; &nbsp;
 						<apex:actionRegion >
-							<apex:inputfield value="{!ques.Answer_Type__c}" >
-								<apex:actionSupport event="onchange" reRender="tbl" />
-							</apex:inputfield>
+							<apex:outputfield value="{!d.objQuestion.Answer_Type__c}"  />
 						</apex:actionRegion><br/>
-						
-						<h1>ANSWER</h1><br/>
-						<apex:repeat value="{!lstAnswer}" var="ans" >
-							<apex:inputfield value="{!ans.Solution__c}"  /><br/>
-<!-- 							rendered="{!ques.Answer_Type__c == 'Paragraph'}" -->
-							<apex:outputPanel >
-<!-- 							rendered="{!ques.Answer_Type__c == 'Yes/No'}" -->
-								<apex:inputcheckbox value="{!ans.Yes__c}" >Yes</apex:inputcheckbox><br/>
-								<apex:inputcheckbox value="{!ans.No__c}" >No</apex:inputcheckbox>
-							</apex:outputPanel> 
-						</apex:repeat>
+						<h1>ANSWER</h1>&nbsp; &nbsp;
+						<apex:inputfield value="{!d.objAnswer.Solution__c}"  rendered="{!d.objQuestion.Answer_Type__c == 'Paragraph'}" id="para"/>
+						<apex:outputPanel rendered="{!d.objQuestion.Answer_Type__c == 'Yes/No'}" id="chk">
+							<apex:inputcheckbox value="{!d.objAnswer.Yes__c}" id="yes">Yes</apex:inputcheckbox>
+							<apex:inputcheckbox value="{!d.objAnswer.No__c}" id="no">No</apex:inputcheckbox>
+						</apex:outputPanel> 
 					</td>
 				</tr>
 			</apex:repeat>
