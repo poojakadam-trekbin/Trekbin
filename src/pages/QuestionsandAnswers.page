@@ -1,37 +1,35 @@
 <apex:page showHeader="false" controller="TBN_QuestionandAnswersController" sidebar="false">
-	<center><h6>QUESTIONS and ANSWERS related to products</h6></center><br/><hr></hr>
 	<apex:outputpanel >
 		<apex:outputtext value="{!intAnswered}" ><b>Answered Questions</b></apex:outputtext><br/>
 		<apex:outputtext value="{!intUnanswered}"><b>Pending Questions</b></apex:outputtext>
 	</apex:outputpanel><hr></hr>
 	<apex:form >
-		<apex:actionFunction name="doControllerSave" action="{!saveanswers}" />
-		<apex:commandbutton value="Save Answers" onclick="doControllerSave();" />
-		<br/><hr></hr>
-		<table border="1" width="80%" id="tbl">
-			<apex:repeat value="{!RecordsToDisplay}" var="d">
-				<tr>
-					<td>
-						<strong>Product name </strong>&nbsp; &nbsp; <apex:outputfield value="{!d.objQuestion.Product__r.Name}"/>
-					</td>
-				</tr>  
-				<tr>
-					<td>
-						<h1>Questions</h1>&nbsp; &nbsp;
-						<apex:outputfield value="{!d.objQuestion.Question__c}"/><br/>
-						<h1>Type of Answer</h1>&nbsp; &nbsp;
-						<apex:actionRegion >
-							<apex:outputfield value="{!d.objQuestion.Answer_Type__c}"  />
-						</apex:actionRegion><br/>
-						<h1>ANSWER</h1>&nbsp; &nbsp;
-						<apex:inputfield value="{!d.objAnswer.Solution__c}"  rendered="{!d.objQuestion.Answer_Type__c == 'Paragraph'}" id="para"/>
-						<apex:outputPanel rendered="{!d.objQuestion.Answer_Type__c == 'Yes/No'}" id="chk">
-							<apex:inputcheckbox value="{!d.objAnswer.Yes__c}" id="yes">Yes</apex:inputcheckbox>
-							<apex:inputcheckbox value="{!d.objAnswer.No__c}" id="no">No</apex:inputcheckbox>
-						</apex:outputPanel> 
-					</td>
-				</tr>
+		<apex:commandButton value="Save Answers" action="{!saveanswers}" id="saveButton" /><br/><hr></hr>
+		<apex:repeat value="{!Question}" var="c">
+			<apex:repeat value="{!Answers}" var="d">
+				<table border="1" width="50%">
+					<tr>
+						<td>
+							<b>Select and click on save answers button</b>&nbsp;&nbsp;
+							<apex:inputcheckbox value="{!d.selected}"> 
+								<apex:actionSupport event="onclick" action="{!getSelected}" rerender="Selected_PBS"/>
+							</apex:inputcheckbox><br/>
+							<b><label>Product Name :</label></b>&nbsp;&nbsp;
+							<apex:outputField value="{!c.objQuestion.Product__r.Name}"/> <br/>
+							<b><label>Question :</label></b>&nbsp;&nbsp;
+							<apex:outputfield value="{!c.objQuestion.Question__c}" /><br/> 
+							<b><label>Answer Type :</label></b>&nbsp;&nbsp;
+							<apex:outputField value="{!c.objQuestion.Answer_Type__c}"/><br/>
+						
+							<apex:inputField value="{!d.objAnswer.Solution__c}" rendered="{!c.objQuestion.Answer_Type__c == 'Paragraph'}" id="para"/><br/>
+
+							<apex:inputField value="{!d.objAnswer.Yes__c}" rendered="{!c.objQuestion.Answer_Type__c == 'Yes/No'}" id="chk1">Yes</apex:inputField>
+
+							<apex:inputField value="{!d.objAnswer.No__c}"  rendered="{!c.objQuestion.Answer_Type__c == 'Yes/No'}" id="chk2">No</apex:inputField>
+						</td>
+					</tr>
+				</table>
 			</apex:repeat>
-		</table>
+		</apex:repeat>
 	</apex:form>
 </apex:page>
